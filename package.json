@@ -1,7 +1,7 @@
 {
   "name": "git-completion",
   "version": "1.0.0",
-  "description": "A installer/uninstaller for git completion.",
+  "description": "A simple installer for git completion.",
   "main": "index.js",
   "bin": {
     "git-completion": "./index.js"
@@ -15,5 +15,20 @@
     "download": "^7.0.0",
     "prompt": "^1.0.0",
     "yargs": "^11.0.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saeedseyfi/git-completion.git"
+  },
+  "keywords": [
+    "git",
+    "git-completion",
+    "auto-complete",
+    "git-autocomplete"
+  ],
+  "bugs": {
+    "url": "https://github.com/saeedseyfi/git-completion/issues"
+  },
+  "homepage": "https://github.com/saeedseyfi/git-completion#readme"
 }
