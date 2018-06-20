@@ -8,7 +8,7 @@ const homedir = require('os').homedir();
 const exec = require('child_process').exec;
 
 function ask(question) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         console.log(question);
         prompt.get([{
             name: 'answer',
@@ -19,46 +19,56 @@ function ask(question) {
                 return answer === 'yes' || answer === 'no';
             }
         }], function (err, result) {
-            if (err) reject(err)
-            else resolve(result.answer === 'yes');
+            if (err)
+                throw err;
+            else
+                resolve(result.answer === 'yes');
         });
     });
 }
 
 function getGitVersion() {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         exec('git --version', (err, stdout) => {
             if (err)
-                reject(err);
-            else
-                resolve(stdout.replace(/[^0-9.]/g, ''));
+                throw err;
+            else {
+                const groups = new RegExp('git version ([0-9.]+)', 'g').exec(stdout);
+                const version = groups && groups[1];
+
+                if (version) {
+                    resolve(version);
+                } else {
+                    throw new Error('Git version not detected.');
+                }
+            }
         });
     });
 }
 
 function downloadAndWriteFile(src, dist) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         download(src)
             .then(data => {
                 fs.writeFile(dist, data, err => {
-                    if (err) reject(err)
-                    else resolve()
+                    if (err)
+                        throw err;
+                    else
+                        resolve()
                 });
             })
             .catch(err => {
                 console.log('Download failed :(', src);
-                reject(err);
+                throw err;
             });
     })
 }
 
 function promptIfFileExists(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         fs.exists(file, alreadyExists => {
             if (alreadyExists) {
-                ask(`${file} already exists, override the old file?`)
-                    .then(resolve)
-                    .catch(reject)
+                ask(`${file} already exists, override the old file?`).then(resolve);
             } else {
                 resolve(true);
             }
@@ -67,7 +77,7 @@ function promptIfFileExists(file) {
 }
 
 async function install(file) {
-    const downloadUrl = 'https://raw.githubusercontent.com/git/git/v#VERSION#/contrib/completion/git-completion.bash'
+    const downloadUrl = 'https://raw.githubusercontent.com/git/git/v#VERSION#/contrib/completion/git-completion.bash';
     const gitVersion = await getGitVersion();
 
     console.log(`git version ${gitVersion} detected.\nDownloading related git-completion bash....`);
@@ -77,7 +87,7 @@ async function install(file) {
             .then(() => {
                 console.log('Done. Now you can put the following code in your .bashrc/.bash_profile to make it working:');
                 console.log('\x1b[36m%s\x1b[0m', `source ${file}`);
-            }).catch(err => console.trace(err));
+            })
     }
 }
 
@@ -86,14 +96,13 @@ function uninstall(file) {
         .then(answer => {
             if (answer) {
                 fs.unlink(file, err => {
-                    if (err) throw err;
+                    if (err)
+                        throw err;
+
                     console.log('Done. Now you should remove the following code from your .bashrc/.bash_profile:');
                     console.log('\x1b[36m%s\x1b[0m', `source ${file}`);
                 });
             }
-        })
-        .catch(err => {
-            throw err;
         })
 }
 
