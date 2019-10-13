@@ -2,19 +2,11 @@
 A simple installer for git completion.
 
 ## How to use
-Get the installer
 ```bash
-npm i -g git-completion
+npx git-completion -- install
 ```
-Install git-completion
-```bash
-git-completion install
-```
-Uninstall git-completion
-```bash
-git-completion uninstall
-```
+Then follow the printed instructions.
 
 ### Options
 
-* `--f`: `git-completion` creates a bash file in home dir by default, you can change its path by `--f` arg. e.g `git-completion install --f ~/scripts/gc.sh`  
+* `--f`: `git-completion` creates a bash file in home dir by default, you can change its path by `--f` arg. e.g `npx git-completion -- install --f ~/scripts/gc.sh`  
